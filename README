@@ -1,0 +1,18 @@
+pdf manipulation scripts
+=============================================
+
+My workplace has a subscription to SpringerLink. So I’ve been having a blast looking at the different books over there. I found lots of books that are on my Amazon wish list and so i was like a child at a candy store.
+
+The problem is that the books are provided via separate pdf files for chapters. I am not sure why they do that, I think to make it tougher to pirate the files? Although that doesn’t really make any sense. Regardless, it is a bit annoying and I’d like to have the books as one pdf to transfer over to my trusty Sony Reader to read them while on the go.
+
+i hacked up a python script to rename the individual files by their chapter number making it easier to join. I then hacked up another script that reads these files and joins them in correct order into one file. Sadly, the scripts are only tested on Linux and will probably only run there. The first version used pyPDF and was probably cross-platform, but it had some problems with the pdfs so i reverted to using pdftotext that, as far as i know, only runs under a GNU Linux system.
+
+Requirements
+------------
+- pdftotext installed
+- pyPDF
+
+Wishlist
+----------
+- make this cross platform
+
