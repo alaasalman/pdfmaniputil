@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 """ 
     Copyright 2010 Alaa Salman <alaa@codedemigod.com>
     
@@ -44,7 +44,7 @@ def compareByActualNumbers(x, y):
 def main(argv):
     fullPath = os.path.abspath(argv[1])
     outputFileName = os.path.join(fullPath, "fullBook.pdf")
-    print "Looking at %s" % fullPath
+    print("Looking at %s" % fullPath)
     
     outputPDF = PdfFileWriter()
 
@@ -55,19 +55,19 @@ def main(argv):
     pp.pprint(sortedPdfList)
 
     for chapPdf in sortedPdfList:
-        pdfInput = PdfFileReader(file(chapPdf, "rb"))
-        for i in xrange(pdfInput.getNumPages()):
+        pdfInput = PdfFileReader(open(chapPdf, "rb"))
+        for i in range(pdfInput.getNumPages()):
             outputPDF.addPage(pdfInput.getPage(i))
 
     # finally, write "output" to document-output.pdf
-    outputStream = file(outputFileName, "wb")
+    outputStream = open(outputFileName, "wb")
     outputPDF.write(outputStream)
     outputStream.close()
 
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print "Supply directory as argument"
+        print("Supply directory as argument")
         sys.exit()
     
     main(sys.argv)

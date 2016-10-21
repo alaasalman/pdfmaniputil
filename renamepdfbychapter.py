@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#! /usr/bin/env python
 """ 
     Copyright 2010 Alaa Salman <alaa@codedemigod.com>
     
@@ -27,19 +27,19 @@ import shutil
 
 def main(argv):
     fullPath = os.path.abspath(argv[1])
-    print "Looking at %s" % fullPath
+    print("Looking at %s" % fullPath)
     
     for fileName in glob.glob(os.path.join(fullPath, '*.pdf')):
         try:
             fullFileName = os.path.join(fullPath, fileName)
-            print "Converting %s" % fullFileName
+            print("Converting %s" % fullFileName)
 
             pOpenCls = Popen(("/usr/bin/pdftotext", fullFileName, "-"), stdout=PIPE)
             convertOut = pOpenCls.stdout
             
             titleContent = ""
 
-            for i in xrange(1, 6):
+            for i in range(1, 6):
                 titleContent += convertOut.readline()
 
             titleContent = titleContent.replace('\n', '')
@@ -55,7 +55,7 @@ def main(argv):
                 shutil.move(fullFileName, newChapterPdf)
 
             else:
-                print "File is not a chapter, checking if front or back"
+                print("File is not a chapter, checking if front or back")
                 if fileName.find("front") != -1:
                     firstPdf = os.path.join(fullPath, "0.pdf")
 
@@ -72,13 +72,13 @@ def main(argv):
 
                     shutil.move(fullFileName, lastPdf)
 
-        except OSError, ex:
-            print ex
-            print 'Failed', fullFileName
+        except OSError as ex:
+            print(ex)
+            print('Failed', fullFileName)
 
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print "Supply directory as argument"
+        print("Supply directory as argument")
         sys.exit()
     main(sys.argv)
