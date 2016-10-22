@@ -1,6 +1,6 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 """ 
-    Copyright 2010 Alaa Salman <alaa@codedemigod.com>
+    Copyright 2016 Alaa Salman <alaa@codedemigod.com>
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -25,60 +25,61 @@ import sys
 import re
 import shutil
 
-def main(argv):
-    fullPath = os.path.abspath(argv[1])
-    print("Looking at %s" % fullPath)
-    
-    for fileName in glob.glob(os.path.join(fullPath, '*.pdf')):
-        try:
-            fullFileName = os.path.join(fullPath, fileName)
-            print("Converting %s" % fullFileName)
 
-            pOpenCls = Popen(("/usr/bin/pdftotext", fullFileName, "-"), stdout=PIPE)
-            convertOut = pOpenCls.stdout
+def main(argv):
+    fullpath = os.path.abspath(argv[1])
+    print('Looking at %s' % fullpath)
+    
+    for fileName in glob.glob(os.path.join(fullpath, '*.pdf')):
+        try:
+            full_file_name = os.path.join(fullpath, fileName)
+            print('Converting %s' % full_file_name)
+
+            p_open_cls = Popen(('/usr/bin/pdftotext', full_file_name, "-"), stdout=PIPE)
+            convert_out = p_open_cls.stdout
             
-            titleContent = ""
+            title_content = b''
 
             for i in range(1, 6):
-                titleContent += convertOut.readline()
+                title_content += convert_out.readline()
 
-            titleContent = titleContent.replace('\n', '')
+            title_content = title_content.replace(b'\n', b'')
             
-            digitSearch = re.search('\d+', titleContent)
+            digit_search = re.search(b'\d+', title_content)
             
-            if digitSearch != None:
-                newChapterPdf = os.path.join(fullPath, digitSearch.group(0) + ".pdf")
+            if digit_search is not None:
+                new_chapter_pdf = os.path.join(fullpath, digit_search.group(0).decode('utf-8') + '.pdf')
 
-                while os.path.exists(newChapterPdf):
-                    newChapterPdf = newChapterPdf + "dup.pdf"
+                while os.path.exists(new_chapter_pdf):
+                    new_chapter_pdf += 'dup.pdf'
                 
-                shutil.move(fullFileName, newChapterPdf)
+                shutil.move(full_file_name, new_chapter_pdf)
 
             else:
-                print("File is not a chapter, checking if front or back")
+                print('File is not a chapter, checking if front or back')
                 if fileName.find("front") != -1:
-                    firstPdf = os.path.join(fullPath, "0.pdf")
+                    first_pdf = os.path.join(fullpath, '0.pdf')
 
-                    while os.path.exists(firstPdf):
-                        firstPdf = firstPdf + "0.pdf"
+                    while os.path.exists(first_pdf):
+                        first_pdf += '0.pdf'
                     
-                    shutil.move(fullFileName, firstPdf)
+                    shutil.move(full_file_name, first_pdf)
 
-                elif fileName.find("back") != -1:
-                    lastPdf = os.path.join(fullPath, "9999.pdf")
+                elif fileName.find('back') != -1:
+                    last_pdf = os.path.join(fullpath, '9999.pdf')
 
-                    while os.path.exists(lastPdf):
-                        lastPdf = lastPdf + "9.pdf"
+                    while os.path.exists(last_pdf):
+                        last_pdf += '9.pdf'
 
-                    shutil.move(fullFileName, lastPdf)
+                    shutil.move(full_file_name, last_pdf)
 
         except OSError as ex:
             print(ex)
-            print('Failed', fullFileName)
+            print('Failed', full_file_name)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print("Supply directory as argument")
+        print('Supply directory as argument')
         sys.exit()
     main(sys.argv)

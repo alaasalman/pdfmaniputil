@@ -1,6 +1,6 @@
-#!/usr/bin/env python
-""" 
-    Copyright 2010 Alaa Salman <alaa@codedemigod.com>
+#!/usr/bin/env python3
+"""
+    Copyright 2016 Alaa Salman <alaa@codedemigod.com>
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,52 +22,37 @@ import glob
 import os
 import os.path
 import pprint
-from pyPdf import PdfFileWriter, PdfFileReader
 
-def compareByActualNumbers(x, y):
-    strippedX = os.path.basename(x)[:-4]
-    strippedY = os.path.basename(y)[:-4]
+from PyPDF2 import PdfFileWriter, PdfFileReader
 
-    if not (strippedX.isdigit() and strippedY.isdigit()):
-        return 0
-
-    xInt = int(strippedX)
-    yInt = int(strippedY)
-
-    if xInt < yInt:
-        return -1
-    elif xInt == yInt:
-        return 0
-    elif xInt > yInt:
-        return 1
 
 def main(argv):
-    fullPath = os.path.abspath(argv[1])
-    outputFileName = os.path.join(fullPath, "fullBook.pdf")
-    print("Looking at %s" % fullPath)
+    full_path = os.path.abspath(argv[1])
+    output_file_name = os.path.join(full_path, 'fullBook.pdf')
+    print('Looking at %s' % full_path)
     
-    outputPDF = PdfFileWriter()
+    output_pdf = PdfFileWriter()
 
-    pdfList = glob.glob(os.path.join(fullPath, '*.pdf'))
-    sortedPdfList = sorted(pdfList, compareByActualNumbers)
+    pdf_list = glob.glob(os.path.join(full_path, '*.pdf'))
+    sorted_pdf_list = sorted(pdf_list, key=lambda fname: fname[:-4])
 
     pp = pprint.PrettyPrinter(indent=2)
-    pp.pprint(sortedPdfList)
+    pp.pprint(sorted_pdf_list)
 
-    for chapPdf in sortedPdfList:
-        pdfInput = PdfFileReader(open(chapPdf, "rb"))
-        for i in range(pdfInput.getNumPages()):
-            outputPDF.addPage(pdfInput.getPage(i))
+    for chapPdf in sorted_pdf_list:
+        pdf_input = PdfFileReader(open(chapPdf, 'rb'))
+        for i in range(pdf_input.getNumPages()):
+            output_pdf.addPage(pdf_input.getPage(i))
 
-    # finally, write "output" to document-output.pdf
-    outputStream = open(outputFileName, "wb")
-    outputPDF.write(outputStream)
-    outputStream.close()
+    # finally, write 'output' to document-output.pdf
+    output_stream = open(output_file_name, 'wb')
+    output_pdf.write(output_stream)
+    output_stream.close()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print("Supply directory as argument")
+        print('Supply directory as argument')
         sys.exit()
     
     main(sys.argv)
